@@ -1212,6 +1212,7 @@ namespace Harbard
 			public string? _EventID;
 			public string? _DetectorEventType;
 			public DetectorConfiguration? _Config;
+			public DetectorDeviceInfo? _Device;
 			public JObject? _SourceData;
 
 			public override JObject? serialize()
@@ -1247,6 +1248,9 @@ namespace Harbard
 
 				if(_Config != null)
 				{ _event.Add(new JProperty("Config", _Config.serialize())); }
+
+				if(_Device != null)
+				{ _event.Add(new JProperty("Device", _Device.serialize())); }
 
 
 				_event.Add(new JProperty("SourceData", _SourceData));
@@ -1316,6 +1320,11 @@ namespace Harbard
 				var data_Config = (JObject?)data["Config"];
 				if(data_Config != null)
 				{ success = success && _Config.deserialize(data_Config); }
+
+				_Device = new DetectorDeviceInfo();
+				var data_Device = (JObject?)data["Device"];
+				if(data_Device != null)
+				{ success = success && _Device.deserialize(data_Device); }
 
 				_SourceData = data;
 
@@ -1503,6 +1512,64 @@ namespace Harbard
 				return obj;
 			}
 
+		}
+
+		public class DetectorDeviceInfo : AJsonSerializable
+		{
+			public string? _Name;
+			public string? _Description;
+			public string? _Serial;
+			public LocationSettings? _Location;
+
+			public override JObject? serialize()
+			{
+				JObject _detectorDeviceInfo = new JObject();
+
+
+				_detectorDeviceInfo.Add(new JProperty("Name", _Name));
+
+
+				_detectorDeviceInfo.Add(new JProperty("Description", _Description));
+
+
+				_detectorDeviceInfo.Add(new JProperty("Serial", _Serial));
+
+				if(_Location != null)
+				{ _detectorDeviceInfo.Add(new JProperty("Location", _Location.serialize())); }
+
+				return _detectorDeviceInfo;
+			}
+
+			public override bool deserialize(JObject data)
+			{
+				bool success = true;
+
+				var data_Name = data["Name"];
+				if(data_Name != null)
+				{ _Name = Convert.ToString(data_Name); }
+				else
+				{ success = false; }
+
+				var data_Description = data["Description"];
+				if(data_Description != null)
+				{ _Description = Convert.ToString(data_Description); }
+				else
+				{ success = false; }
+
+				var data_Serial = data["Serial"];
+				if(data_Serial != null)
+				{ _Serial = Convert.ToString(data_Serial); }
+				else
+				{ success = false; }
+
+				_Location = new LocationSettings();
+				var data_Location = (JObject?)data["Location"];
+				if(data_Location != null)
+				{ success = success && _Location.deserialize(data_Location); }
+
+
+				return success;
+			}
 		}
 
 		public class EventANPR : Event
