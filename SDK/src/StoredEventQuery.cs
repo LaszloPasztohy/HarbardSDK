@@ -2,6 +2,8 @@ using System;
 using Harbard;
 using Harbard.Api;
 using System.Diagnostics;
+using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Harbard
 {
@@ -22,14 +24,42 @@ namespace Harbard
             this.callback = callback;
         }
 
-        public void runAsync()
+        public void RunAsync()
         {
             storageSession.GetEventsAsync(storageEventsRequest, callback);
         }
 
-        public StorageEvents run()
+        public StorageEvents Run()
         {
             return storageSession.GetEvents(storageEventsRequest);
         }
+
+        public EventImage? GetEventImage(Event storageEvent)
+        {
+            EventImage? event_image = null;
+            string event_timestamp = DateTimeConverter.convertToTimeStamp(storageEvent._EventTime).ToString();
+            string url = $"/playback/image?detector={storageEvent._DetectorID}&event={storageEvent._EventID}&timestamp={event_timestamp}&sid={storageSession.Session.Id}";
+            (HttpResponseMessage? response, ApiResult? error) = storageSession.Session.requestHttpGet(url);
+
+            if (response != null) 
+            {
+                using (StreamReader reader = new StreamReader(response.Content.ReadAsStream()))
+                {
+                    event_image = new EventImage();
+                    var task = response.Content.ReadAsByteArrayAsync();
+                    task.RunSynchronously();
+                    event_image.data = task.Result;
+                    //TODO missing image parameters parse from headers X-.....
+                }
+            }
+
+            return event_image;
+        }
+
+        /*
+        public EventVideo? GetEventVideo()
+        {
+            //TODO
+        }*/
     }
 }
