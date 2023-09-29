@@ -8,74 +8,6 @@ namespace Harbard
 		{
 			public SystemSession(Session parent) : base(parent) {}
 
-			public TestOutput RunTest(TestInput data)
-			{
-				ApiResult ApiRes = session.executeCommand("System", "RunTest", data.serialize());
-				var response = new TestOutput();
-
-				if(ApiRes.data != null)
-				{
-					if(response.deserialize(ApiRes.data))
-					{
-						return response;
-					}
-				}
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return response;
-			}
-
-			public void RunTestAsync(TestInput data, Action<TestOutput, ApiException?> callback)
-			{
-				session.executeCommandAsync("System", "RunTest", (ApiResult ApiRes) =>
-				{
-					var response = new TestOutput();
-
-					if(ApiRes.data != null)
-					{
-						response.deserialize(ApiRes.data);
-					}
-
-					callback(response, ApiRes.error);
-				}, data.serialize());
-			}
-
-			public ApiVersion GetApiVersion()
-			{
-				ApiResult ApiRes = session.executeCommand("System", "GetApiVersion");
-				var response = new ApiVersion();
-
-				if(ApiRes.data != null)
-				{
-					if(response.deserialize(ApiRes.data))
-					{
-						return response;
-					}
-				}
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return response;
-			}
-
-			public void GetApiVersionAsync(Action<ApiVersion, ApiException?> callback)
-			{
-				session.executeCommandAsync("System", "GetApiVersion", (ApiResult ApiRes) =>
-				{
-					var response = new ApiVersion();
-
-					if(ApiRes.data != null)
-					{
-						response.deserialize(ApiRes.data);
-					}
-
-					callback(response, ApiRes.error);
-				});
-			}
-
 			public SystemSettingsResponse GetDevice()
 			{
 				ApiResult ApiRes = session.executeCommand("System", "GetDevice");
@@ -134,217 +66,6 @@ namespace Harbard
 				session.executeCommandAsync("System", "SetDevice", (ApiResult ApiRes) =>
 				{
 					var response = new SystemSettings();
-
-					if(ApiRes.data != null)
-					{
-						response.deserialize(ApiRes.data);
-					}
-
-					callback(response, ApiRes.error);
-				});
-			}
-
-			public UserInfo GetCurrentUser()
-			{
-				ApiResult ApiRes = session.executeCommand("System", "GetCurrentUser");
-				var response = new UserInfo();
-
-				if(ApiRes.data != null)
-				{
-					if(response.deserialize(ApiRes.data))
-					{
-						return response;
-					}
-				}
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return response;
-			}
-
-			public void GetCurrentUserAsync(Action<UserInfo, ApiException?> callback)
-			{
-				session.executeCommandAsync("System", "GetCurrentUser", (ApiResult ApiRes) =>
-				{
-					var response = new UserInfo();
-
-					if(ApiRes.data != null)
-					{
-						response.deserialize(ApiRes.data);
-					}
-
-					callback(response, ApiRes.error);
-				});
-			}
-
-			public Users GetUsers()
-			{
-				ApiResult ApiRes = session.executeCommand("System", "GetUsers");
-				var response = new Users();
-
-				if(ApiRes.data != null)
-				{
-					if(response.deserialize(ApiRes.data))
-					{
-						return response;
-					}
-				}
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return response;
-			}
-
-			public void GetUsersAsync(Action<Users, ApiException?> callback)
-			{
-				session.executeCommandAsync("System", "GetUsers", (ApiResult ApiRes) =>
-				{
-					var response = new Users();
-
-					if(ApiRes.data != null)
-					{
-						response.deserialize(ApiRes.data);
-					}
-
-					callback(response, ApiRes.error);
-				});
-			}
-
-			public ApiResult AddUser(User data)
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "AddUser", data.serialize());
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void AddUserAsync(User data, Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "AddUser", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
-			}
-
-			public ApiResult ModifyUser(User data)
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "ModifyUser", data.serialize());
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void ModifyUserAsync(User data, Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "ModifyUser", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
-			}
-
-			public ApiResult DeleteUser(UserId data)
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "DeleteUser", data.serialize());
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void DeleteUserAsync(UserId data, Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "DeleteUser", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
-			}
-
-			public SecuritySettings GetSecuritySettings()
-			{
-				ApiResult ApiRes = session.executeCommand("System", "GetSecuritySettings");
-				var response = new SecuritySettings();
-
-				if(ApiRes.data != null)
-				{
-					if(response.deserialize(ApiRes.data))
-					{
-						return response;
-					}
-				}
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return response;
-			}
-
-			public void GetSecuritySettingsAsync(Action<SecuritySettings, ApiException?> callback)
-			{
-				session.executeCommandAsync("System", "GetSecuritySettings", (ApiResult ApiRes) =>
-				{
-					var response = new SecuritySettings();
-
-					if(ApiRes.data != null)
-					{
-						response.deserialize(ApiRes.data);
-					}
-
-					callback(response, ApiRes.error);
-				});
-			}
-
-			public ApiResult SetSecuritySettings(SecuritySettings data)
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "SetSecuritySettings", data.serialize());
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void SetSecuritySettingsAsync(SecuritySettings data, Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "SetSecuritySettings", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
-			}
-
-			public ApiResult ClearSecurityHistory()
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "ClearSecurityHistory");
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void ClearSecurityHistoryAsync(Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "ClearSecurityHistory", (ApiResult ApiRes) => { callback(ApiRes); });
-			}
-
-			public SecurityHistory GetSecurityHistory()
-			{
-				ApiResult ApiRes = session.executeCommand("System", "GetSecurityHistory");
-				var response = new SecurityHistory();
-
-				if(ApiRes.data != null)
-				{
-					if(response.deserialize(ApiRes.data))
-					{
-						return response;
-					}
-				}
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return response;
-			}
-
-			public void GetSecurityHistoryAsync(Action<SecurityHistory, ApiException?> callback)
-			{
-				session.executeCommandAsync("System", "GetSecurityHistory", (ApiResult ApiRes) =>
-				{
-					var response = new SecurityHistory();
 
 					if(ApiRes.data != null)
 					{
@@ -513,6 +234,172 @@ namespace Harbard
 				session.executeCommandAsync("System", "FactoryReset", (ApiResult ApiRes) => { callback(ApiRes); });
 			}
 
+			public TestOutput RunTest(TestInput data)
+			{
+				ApiResult ApiRes = session.executeCommand("System", "RunTest", data.serialize());
+				var response = new TestOutput();
+
+				if(ApiRes.data != null)
+				{
+					if(response.deserialize(ApiRes.data))
+					{
+						return response;
+					}
+				}
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return response;
+			}
+
+			public void RunTestAsync(TestInput data, Action<TestOutput, ApiException?> callback)
+			{
+				session.executeCommandAsync("System", "RunTest", (ApiResult ApiRes) =>
+				{
+					var response = new TestOutput();
+
+					if(ApiRes.data != null)
+					{
+						response.deserialize(ApiRes.data);
+					}
+
+					callback(response, ApiRes.error);
+				}, data.serialize());
+			}
+
+			public ApiVersion GetApiVersion()
+			{
+				ApiResult ApiRes = session.executeCommand("System", "GetApiVersion");
+				var response = new ApiVersion();
+
+				if(ApiRes.data != null)
+				{
+					if(response.deserialize(ApiRes.data))
+					{
+						return response;
+					}
+				}
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return response;
+			}
+
+			public void GetApiVersionAsync(Action<ApiVersion, ApiException?> callback)
+			{
+				session.executeCommandAsync("System", "GetApiVersion", (ApiResult ApiRes) =>
+				{
+					var response = new ApiVersion();
+
+					if(ApiRes.data != null)
+					{
+						response.deserialize(ApiRes.data);
+					}
+
+					callback(response, ApiRes.error);
+				});
+			}
+
+			public SecuritySettings GetSecuritySettings()
+			{
+				ApiResult ApiRes = session.executeCommand("System", "GetSecuritySettings");
+				var response = new SecuritySettings();
+
+				if(ApiRes.data != null)
+				{
+					if(response.deserialize(ApiRes.data))
+					{
+						return response;
+					}
+				}
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return response;
+			}
+
+			public void GetSecuritySettingsAsync(Action<SecuritySettings, ApiException?> callback)
+			{
+				session.executeCommandAsync("System", "GetSecuritySettings", (ApiResult ApiRes) =>
+				{
+					var response = new SecuritySettings();
+
+					if(ApiRes.data != null)
+					{
+						response.deserialize(ApiRes.data);
+					}
+
+					callback(response, ApiRes.error);
+				});
+			}
+
+			public ApiResult SetSecuritySettings(SecuritySettings data)
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "SetSecuritySettings", data.serialize());
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void SetSecuritySettingsAsync(SecuritySettings data, Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "SetSecuritySettings", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+			}
+
+			public ApiResult ClearSecurityHistory()
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "ClearSecurityHistory");
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void ClearSecurityHistoryAsync(Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "ClearSecurityHistory", (ApiResult ApiRes) => { callback(ApiRes); });
+			}
+
+			public SecurityHistory GetSecurityHistory()
+			{
+				ApiResult ApiRes = session.executeCommand("System", "GetSecurityHistory");
+				var response = new SecurityHistory();
+
+				if(ApiRes.data != null)
+				{
+					if(response.deserialize(ApiRes.data))
+					{
+						return response;
+					}
+				}
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return response;
+			}
+
+			public void GetSecurityHistoryAsync(Action<SecurityHistory, ApiException?> callback)
+			{
+				session.executeCommandAsync("System", "GetSecurityHistory", (ApiResult ApiRes) =>
+				{
+					var response = new SecurityHistory();
+
+					if(ApiRes.data != null)
+					{
+						response.deserialize(ApiRes.data);
+					}
+
+					callback(response, ApiRes.error);
+				});
+			}
+
 			public TimeSettings GetTime()
 			{
 				ApiResult ApiRes = session.executeCommand("System", "GetTime");
@@ -609,6 +496,119 @@ namespace Harbard
 			public void SetNtpSettingsAsync(NtpSettings data, Action<ApiResult> callback)
 			{
 				session.executeCommandAsync("System", "SetNtpSettings", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+			}
+
+			public UserInfo GetCurrentUser()
+			{
+				ApiResult ApiRes = session.executeCommand("System", "GetCurrentUser");
+				var response = new UserInfo();
+
+				if(ApiRes.data != null)
+				{
+					if(response.deserialize(ApiRes.data))
+					{
+						return response;
+					}
+				}
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return response;
+			}
+
+			public void GetCurrentUserAsync(Action<UserInfo, ApiException?> callback)
+			{
+				session.executeCommandAsync("System", "GetCurrentUser", (ApiResult ApiRes) =>
+				{
+					var response = new UserInfo();
+
+					if(ApiRes.data != null)
+					{
+						response.deserialize(ApiRes.data);
+					}
+
+					callback(response, ApiRes.error);
+				});
+			}
+
+			public Users GetUsers()
+			{
+				ApiResult ApiRes = session.executeCommand("System", "GetUsers");
+				var response = new Users();
+
+				if(ApiRes.data != null)
+				{
+					if(response.deserialize(ApiRes.data))
+					{
+						return response;
+					}
+				}
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return response;
+			}
+
+			public void GetUsersAsync(Action<Users, ApiException?> callback)
+			{
+				session.executeCommandAsync("System", "GetUsers", (ApiResult ApiRes) =>
+				{
+					var response = new Users();
+
+					if(ApiRes.data != null)
+					{
+						response.deserialize(ApiRes.data);
+					}
+
+					callback(response, ApiRes.error);
+				});
+			}
+
+			public ApiResult AddUser(User data)
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "AddUser", data.serialize());
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void AddUserAsync(User data, Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "AddUser", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+			}
+
+			public ApiResult ModifyUser(User data)
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "ModifyUser", data.serialize());
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void ModifyUserAsync(User data, Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "ModifyUser", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+			}
+
+			public ApiResult DeleteUser(UserId data)
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "DeleteUser", data.serialize());
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void DeleteUserAsync(UserId data, Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "DeleteUser", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
 			}
 
 		}	}

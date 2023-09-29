@@ -4,123 +4,6 @@ namespace Harbard
 {
 	namespace Api
 	{
-		public class TestInput : AJsonSerializable
-		{
-			public string? _Text;
-			public bool _ThrowException;
-
-			public override JObject? serialize()
-			{
-				JObject _testInput = new JObject();
-
-
-				_testInput.Add(new JProperty("Text", _Text));
-
-
-				_testInput.Add(new JProperty("ThrowException", _ThrowException));
-
-				return _testInput;
-			}
-
-			public override bool deserialize(JObject data)
-			{
-				bool success = true;
-
-				var data_Text = data["Text"];
-				if(data_Text != null)
-				{ _Text = Convert.ToString(data_Text); }
-				else
-				{ success = false; }
-
-				var data_ThrowException = data["ThrowException"];
-				if(data_ThrowException != null)
-				{ _ThrowException = Convert.ToBoolean(data_ThrowException); }
-				else
-				{ success = false; }
-
-
-				return success;
-			}
-		}
-
-		public class TestOutput : AJsonSerializable
-		{
-			public string? _Text;
-			public int _Size;
-			public string? _User;
-
-			public override JObject? serialize()
-			{
-				JObject _testOutput = new JObject();
-
-
-				_testOutput.Add(new JProperty("Text", _Text));
-
-
-				_testOutput.Add(new JProperty("Size", _Size));
-
-
-				_testOutput.Add(new JProperty("User", _User));
-
-				return _testOutput;
-			}
-
-			public override bool deserialize(JObject data)
-			{
-				bool success = true;
-
-				var data_Text = data["Text"];
-				if(data_Text != null)
-				{ _Text = Convert.ToString(data_Text); }
-				else
-				{ success = false; }
-
-				var data_Size = data["Size"];
-				if(data_Size != null)
-				{ _Size = Convert.ToInt32(data_Size); }
-				else
-				{ success = false; }
-
-				var data_User = data["User"];
-				if(data_User != null)
-				{ _User = Convert.ToString(data_User); }
-				else
-				{ success = false; }
-
-
-				return success;
-			}
-		}
-
-		public class ApiVersion : AJsonSerializable
-		{
-			public int _Version;
-
-			public override JObject? serialize()
-			{
-				JObject _apiVersion = new JObject();
-
-
-				_apiVersion.Add(new JProperty("Version", _Version));
-
-				return _apiVersion;
-			}
-
-			public override bool deserialize(JObject data)
-			{
-				bool success = true;
-
-				var data_Version = data["Version"];
-				if(data_Version != null)
-				{ _Version = Convert.ToInt32(data_Version); }
-				else
-				{ success = false; }
-
-
-				return success;
-			}
-		}
-
 		public class SystemSettingsResponse : SystemSettings
 		{
 			public SystemSettingsDevice? _Device;
@@ -223,205 +106,6 @@ namespace Harbard
 				var data_Location = (JObject?)data["Location"];
 				if(data_Location != null)
 				{ success = success && _Location.deserialize(data_Location); }
-
-
-				return success;
-			}
-		}
-
-		public class UserId : AJsonSerializable
-		{
-			public string? _Name;
-
-			public override JObject? serialize()
-			{
-				JObject _userId = new JObject();
-
-
-				_userId.Add(new JProperty("Name", _Name));
-
-				return _userId;
-			}
-
-			public override bool deserialize(JObject data)
-			{
-				bool success = true;
-
-				var data_Name = data["Name"];
-				if(data_Name != null)
-				{ _Name = Convert.ToString(data_Name); }
-				else
-				{ success = false; }
-
-
-				return success;
-			}
-		}
-
-		public class UserInfo : UserId
-		{
-			public string? _Role;
-
-			public override JObject? serialize()
-			{
-				var base_jobj = base.serialize();
-				if(base_jobj != null)
-				{
-
-					base_jobj.Add(new JProperty("Role", _Role));
-
-				}
-				return base_jobj;
-			}
-
-			public override bool deserialize(JObject data)
-			{
-				bool success = true;
-
-				var data_Role = data["Role"];
-				if(data_Role != null)
-				{ _Role = Convert.ToString(data_Role); }
-				else
-				{ success = false; }
-
-				base.deserialize(data);
-
-				return success;
-			}
-		}
-
-		public class User : UserInfo
-		{
-			public string? _Password;
-
-			public override JObject? serialize()
-			{
-				var base_jobj = base.serialize();
-				if(base_jobj != null)
-				{
-
-					base_jobj.Add(new JProperty("Password", _Password));
-
-				}
-				return base_jobj;
-			}
-
-			public override bool deserialize(JObject data)
-			{
-				bool success = true;
-
-				var data_Password = data["Password"];
-				if(data_Password != null)
-				{ _Password = Convert.ToString(data_Password); }
-				else
-				{ success = false; }
-
-				base.deserialize(data);
-
-				return success;
-			}
-		}
-
-		public class Users : AJsonSerializable
-		{
-			public List<User>? _Users;
-
-			public override JObject? serialize()
-			{
-				JObject _users = new JObject();
-
-				if(_Users != null)
-				{ _users.Add("Users",Serializers.serialize_ListUser(_Users)); }
-
-				return _users;
-			}
-
-			public override bool deserialize(JObject data)
-			{
-				bool success = true;
-
-				var data_Users = (JObject?)data["Users"];
-				if(data_Users != null)
-				{ _Users = Deserializers.deserialize_ListUser(data_Users); }
-				else
-				{ success = false; }
-
-
-				return success;
-			}
-		}
-
-		public class SecuritySettings : AJsonSerializable
-		{
-			public int _AuthenticationAttemptLimit;
-			public long _SourceBlockDuration;
-
-			public override JObject? serialize()
-			{
-				JObject _securitySettings = new JObject();
-
-
-				_securitySettings.Add(new JProperty("AuthenticationAttemptLimit", _AuthenticationAttemptLimit));
-
-
-				_securitySettings.Add(new JProperty("SourceBlockDuration", _SourceBlockDuration));
-
-				return _securitySettings;
-			}
-
-			public override bool deserialize(JObject data)
-			{
-				bool success = true;
-
-				var data_AuthenticationAttemptLimit = data["AuthenticationAttemptLimit"];
-				if(data_AuthenticationAttemptLimit != null)
-				{ _AuthenticationAttemptLimit = Convert.ToInt32(data_AuthenticationAttemptLimit); }
-				else
-				{ success = false; }
-
-				var data_SourceBlockDuration = data["SourceBlockDuration"];
-				if(data_SourceBlockDuration != null)
-				{ _SourceBlockDuration = Convert.ToInt64(data_SourceBlockDuration); }
-				else
-				{ success = false; }
-
-
-				return success;
-			}
-		}
-
-		public class SecurityHistory : AJsonSerializable
-		{
-			public Dictionary<string, long>? _BlockedSources;
-			public List<ActiveSession>? _Sessions;
-
-			public override JObject? serialize()
-			{
-				JObject _securityHistory = new JObject();
-
-				if(_BlockedSources != null)
-				{ _securityHistory.Add("BlockedSources",Serializers.serialize_Mapint64(_BlockedSources)); }
-				if(_Sessions != null)
-				{ _securityHistory.Add("Sessions",Serializers.serialize_ListActiveSession(_Sessions)); }
-
-				return _securityHistory;
-			}
-
-			public override bool deserialize(JObject data)
-			{
-				bool success = true;
-
-				var data_BlockedSources = (JObject?)data["BlockedSources"];
-				if(data_BlockedSources != null)
-				{ _BlockedSources = Deserializers.deserialize_Mapint64(data_BlockedSources); }
-				else
-				{ success = false; }
-
-				var data_Sessions = (JObject?)data["Sessions"];
-				if(data_Sessions != null)
-				{ _Sessions = Deserializers.deserialize_ListActiveSession(data_Sessions); }
-				else
-				{ success = false; }
 
 
 				return success;
@@ -669,6 +353,200 @@ namespace Harbard
 			}
 		}
 
+		public class TestInput : AJsonSerializable
+		{
+			public string? _Text;
+			public bool _ThrowException;
+
+			public override JObject? serialize()
+			{
+				JObject _testInput = new JObject();
+
+
+				_testInput.Add(new JProperty("Text", _Text));
+
+
+				_testInput.Add(new JProperty("ThrowException", _ThrowException));
+
+				return _testInput;
+			}
+
+			public override bool deserialize(JObject data)
+			{
+				bool success = true;
+
+				var data_Text = data["Text"];
+				if(data_Text != null)
+				{ _Text = Convert.ToString(data_Text); }
+				else
+				{ success = false; }
+
+				var data_ThrowException = data["ThrowException"];
+				if(data_ThrowException != null)
+				{ _ThrowException = Convert.ToBoolean(data_ThrowException); }
+				else
+				{ success = false; }
+
+
+				return success;
+			}
+		}
+
+		public class TestOutput : AJsonSerializable
+		{
+			public string? _Text;
+			public int _Size;
+			public string? _User;
+
+			public override JObject? serialize()
+			{
+				JObject _testOutput = new JObject();
+
+
+				_testOutput.Add(new JProperty("Text", _Text));
+
+
+				_testOutput.Add(new JProperty("Size", _Size));
+
+
+				_testOutput.Add(new JProperty("User", _User));
+
+				return _testOutput;
+			}
+
+			public override bool deserialize(JObject data)
+			{
+				bool success = true;
+
+				var data_Text = data["Text"];
+				if(data_Text != null)
+				{ _Text = Convert.ToString(data_Text); }
+				else
+				{ success = false; }
+
+				var data_Size = data["Size"];
+				if(data_Size != null)
+				{ _Size = Convert.ToInt32(data_Size); }
+				else
+				{ success = false; }
+
+				var data_User = data["User"];
+				if(data_User != null)
+				{ _User = Convert.ToString(data_User); }
+				else
+				{ success = false; }
+
+
+				return success;
+			}
+		}
+
+		public class ApiVersion : AJsonSerializable
+		{
+			public int _Version;
+
+			public override JObject? serialize()
+			{
+				JObject _apiVersion = new JObject();
+
+
+				_apiVersion.Add(new JProperty("Version", _Version));
+
+				return _apiVersion;
+			}
+
+			public override bool deserialize(JObject data)
+			{
+				bool success = true;
+
+				var data_Version = data["Version"];
+				if(data_Version != null)
+				{ _Version = Convert.ToInt32(data_Version); }
+				else
+				{ success = false; }
+
+
+				return success;
+			}
+		}
+
+		public class SecuritySettings : AJsonSerializable
+		{
+			public int _AuthenticationAttemptLimit;
+			public long _SourceBlockDuration;
+
+			public override JObject? serialize()
+			{
+				JObject _securitySettings = new JObject();
+
+
+				_securitySettings.Add(new JProperty("AuthenticationAttemptLimit", _AuthenticationAttemptLimit));
+
+
+				_securitySettings.Add(new JProperty("SourceBlockDuration", _SourceBlockDuration));
+
+				return _securitySettings;
+			}
+
+			public override bool deserialize(JObject data)
+			{
+				bool success = true;
+
+				var data_AuthenticationAttemptLimit = data["AuthenticationAttemptLimit"];
+				if(data_AuthenticationAttemptLimit != null)
+				{ _AuthenticationAttemptLimit = Convert.ToInt32(data_AuthenticationAttemptLimit); }
+				else
+				{ success = false; }
+
+				var data_SourceBlockDuration = data["SourceBlockDuration"];
+				if(data_SourceBlockDuration != null)
+				{ _SourceBlockDuration = Convert.ToInt64(data_SourceBlockDuration); }
+				else
+				{ success = false; }
+
+
+				return success;
+			}
+		}
+
+		public class SecurityHistory : AJsonSerializable
+		{
+			public Dictionary<string, long>? _BlockedSources;
+			public List<ActiveSession>? _Sessions;
+
+			public override JObject? serialize()
+			{
+				JObject _securityHistory = new JObject();
+
+				if(_BlockedSources != null)
+				{ _securityHistory.Add("BlockedSources",Serializers.serialize_Mapint64(_BlockedSources)); }
+				if(_Sessions != null)
+				{ _securityHistory.Add("Sessions",Serializers.serialize_ListActiveSession(_Sessions)); }
+
+				return _securityHistory;
+			}
+
+			public override bool deserialize(JObject data)
+			{
+				bool success = true;
+
+				var data_BlockedSources = (JObject?)data["BlockedSources"];
+				if(data_BlockedSources != null)
+				{ _BlockedSources = Deserializers.deserialize_Mapint64(data_BlockedSources); }
+				else
+				{ success = false; }
+
+				var data_Sessions = (JObject?)data["Sessions"];
+				if(data_Sessions != null)
+				{ _Sessions = Deserializers.deserialize_ListActiveSession(data_Sessions); }
+				else
+				{ success = false; }
+
+
+				return success;
+			}
+		}
+
 		public class TimeSettings : AJsonSerializable
 		{
 			public DateTime _Timestamp;
@@ -729,6 +607,128 @@ namespace Harbard
 				var data_Servers = (JObject?)data["Servers"];
 				if(data_Servers != null)
 				{ _Servers = Deserializers.deserialize_Liststring(data_Servers); }
+				else
+				{ success = false; }
+
+
+				return success;
+			}
+		}
+
+		public class UserId : AJsonSerializable
+		{
+			public string? _Name;
+
+			public override JObject? serialize()
+			{
+				JObject _userId = new JObject();
+
+
+				_userId.Add(new JProperty("Name", _Name));
+
+				return _userId;
+			}
+
+			public override bool deserialize(JObject data)
+			{
+				bool success = true;
+
+				var data_Name = data["Name"];
+				if(data_Name != null)
+				{ _Name = Convert.ToString(data_Name); }
+				else
+				{ success = false; }
+
+
+				return success;
+			}
+		}
+
+		public class UserInfo : UserId
+		{
+			public string? _Role;
+
+			public override JObject? serialize()
+			{
+				var base_jobj = base.serialize();
+				if(base_jobj != null)
+				{
+
+					base_jobj.Add(new JProperty("Role", _Role));
+
+				}
+				return base_jobj;
+			}
+
+			public override bool deserialize(JObject data)
+			{
+				bool success = true;
+
+				var data_Role = data["Role"];
+				if(data_Role != null)
+				{ _Role = Convert.ToString(data_Role); }
+				else
+				{ success = false; }
+
+				base.deserialize(data);
+
+				return success;
+			}
+		}
+
+		public class User : UserInfo
+		{
+			public string? _Password;
+
+			public override JObject? serialize()
+			{
+				var base_jobj = base.serialize();
+				if(base_jobj != null)
+				{
+
+					base_jobj.Add(new JProperty("Password", _Password));
+
+				}
+				return base_jobj;
+			}
+
+			public override bool deserialize(JObject data)
+			{
+				bool success = true;
+
+				var data_Password = data["Password"];
+				if(data_Password != null)
+				{ _Password = Convert.ToString(data_Password); }
+				else
+				{ success = false; }
+
+				base.deserialize(data);
+
+				return success;
+			}
+		}
+
+		public class Users : AJsonSerializable
+		{
+			public List<User>? _Users;
+
+			public override JObject? serialize()
+			{
+				JObject _users = new JObject();
+
+				if(_Users != null)
+				{ _users.Add("Users",Serializers.serialize_ListUser(_Users)); }
+
+				return _users;
+			}
+
+			public override bool deserialize(JObject data)
+			{
+				bool success = true;
+
+				var data_Users = (JObject?)data["Users"];
+				if(data_Users != null)
+				{ _Users = Deserializers.deserialize_ListUser(data_Users); }
 				else
 				{ success = false; }
 

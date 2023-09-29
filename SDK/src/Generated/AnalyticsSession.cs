@@ -8,70 +8,6 @@ namespace Harbard
 		{
 			public AnalyticsSession(Session parent) : base(parent) {}
 
-			public ApiResult StartEvents(BufferedEventsRequest data)
-			{
-				ApiResult ApiRes = Session.executeCommand("Analytics", "StartEvents", data.serialize());
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void StartEventsAsync(BufferedEventsRequest data, Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("Analytics", "StartEvents", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
-			}
-
-			public ApiResult StopEvents()
-			{
-				ApiResult ApiRes = Session.executeCommand("Analytics", "StopEvents");
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void StopEventsAsync(Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("Analytics", "StopEvents", (ApiResult ApiRes) => { callback(ApiRes); });
-			}
-
-			public BufferedEvents GetEvents()
-			{
-				ApiResult ApiRes = session.executeCommand("Analytics", "GetEvents");
-				var response = new BufferedEvents();
-
-				if(ApiRes.data != null)
-				{
-					if(response.deserialize(ApiRes.data))
-					{
-						return response;
-					}
-				}
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return response;
-			}
-
-			public void GetEventsAsync(Action<BufferedEvents, ApiException?> callback)
-			{
-				session.executeCommandAsync("Analytics", "GetEvents", (ApiResult ApiRes) =>
-				{
-					var response = new BufferedEvents();
-
-					if(ApiRes.data != null)
-					{
-						response.deserialize(ApiRes.data);
-					}
-
-					callback(response, ApiRes.error);
-				});
-			}
-
 			public SupportedDetectors GetSupportedDetectors()
 			{
 				ApiResult ApiRes = session.executeCommand("Analytics", "GetSupportedDetectors");
@@ -564,6 +500,70 @@ namespace Harbard
 
 					callback(response, ApiRes.error);
 				}, data.serialize());
+			}
+
+			public ApiResult StartEvents(BufferedEventsRequest data)
+			{
+				ApiResult ApiRes = Session.executeCommand("Analytics", "StartEvents", data.serialize());
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void StartEventsAsync(BufferedEventsRequest data, Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("Analytics", "StartEvents", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+			}
+
+			public ApiResult StopEvents()
+			{
+				ApiResult ApiRes = Session.executeCommand("Analytics", "StopEvents");
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void StopEventsAsync(Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("Analytics", "StopEvents", (ApiResult ApiRes) => { callback(ApiRes); });
+			}
+
+			public BufferedEvents GetEvents()
+			{
+				ApiResult ApiRes = session.executeCommand("Analytics", "GetEvents");
+				var response = new BufferedEvents();
+
+				if(ApiRes.data != null)
+				{
+					if(response.deserialize(ApiRes.data))
+					{
+						return response;
+					}
+				}
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return response;
+			}
+
+			public void GetEventsAsync(Action<BufferedEvents, ApiException?> callback)
+			{
+				session.executeCommandAsync("Analytics", "GetEvents", (ApiResult ApiRes) =>
+				{
+					var response = new BufferedEvents();
+
+					if(ApiRes.data != null)
+					{
+						response.deserialize(ApiRes.data);
+					}
+
+					callback(response, ApiRes.error);
+				});
 			}
 
 		}	}

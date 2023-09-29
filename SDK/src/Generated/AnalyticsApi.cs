@@ -4,73 +4,6 @@ namespace Harbard
 {
 	namespace Api
 	{
-		public class BufferedEventsRequest : AJsonSerializable
-		{
-			public List<string>? _Filter;
-
-			public override JObject? serialize()
-			{
-				JObject _bufferedEventsRequest = new JObject();
-
-				if(_Filter != null)
-				{ _bufferedEventsRequest.Add("Filter",Serializers.serialize_Listguid(_Filter)); }
-
-				return _bufferedEventsRequest;
-			}
-
-			public override bool deserialize(JObject data)
-			{
-				bool success = true;
-
-				var data_Filter = (JObject?)data["Filter"];
-				if(data_Filter != null)
-				{ _Filter = Deserializers.deserialize_Listguid(data_Filter); }
-				else
-				{ success = false; }
-
-
-				return success;
-			}
-		}
-
-		public class BufferedEvents : AJsonSerializable
-		{
-			public List<Event>? _EventList;
-			public int _DiscardedEvents;
-
-			public override JObject? serialize()
-			{
-				JObject _bufferedEvents = new JObject();
-
-				if(_EventList != null)
-				{ _bufferedEvents.Add("EventList",Serializers.serialize_ListEvent(_EventList)); }
-
-				_bufferedEvents.Add(new JProperty("DiscardedEvents", _DiscardedEvents));
-
-				return _bufferedEvents;
-			}
-
-			public override bool deserialize(JObject data)
-			{
-				bool success = true;
-
-				var data_EventList = (JObject?)data["EventList"];
-				if(data_EventList != null)
-				{ _EventList = Deserializers.deserialize_ListEvent(data_EventList); }
-				else
-				{ success = false; }
-
-				var data_DiscardedEvents = data["DiscardedEvents"];
-				if(data_DiscardedEvents != null)
-				{ _DiscardedEvents = Convert.ToInt32(data_DiscardedEvents); }
-				else
-				{ success = false; }
-
-
-				return success;
-			}
-		}
-
 		public class DetectorList : AJsonSerializable
 		{
 			public List<DetectorInfo>? _Detectors;
@@ -466,6 +399,73 @@ namespace Harbard
 				var data_Timestamp = data["Timestamp"];
 				if(data_Timestamp != null)
 				{ _Timestamp = DateTimeConverter.convertToDateTime(Convert.ToInt64(data_Timestamp)); }
+				else
+				{ success = false; }
+
+
+				return success;
+			}
+		}
+
+		public class BufferedEventsRequest : AJsonSerializable
+		{
+			public List<string>? _Filter;
+
+			public override JObject? serialize()
+			{
+				JObject _bufferedEventsRequest = new JObject();
+
+				if(_Filter != null)
+				{ _bufferedEventsRequest.Add("Filter",Serializers.serialize_Listguid(_Filter)); }
+
+				return _bufferedEventsRequest;
+			}
+
+			public override bool deserialize(JObject data)
+			{
+				bool success = true;
+
+				var data_Filter = (JObject?)data["Filter"];
+				if(data_Filter != null)
+				{ _Filter = Deserializers.deserialize_Listguid(data_Filter); }
+				else
+				{ success = false; }
+
+
+				return success;
+			}
+		}
+
+		public class BufferedEvents : AJsonSerializable
+		{
+			public List<Event>? _EventList;
+			public int _DiscardedEvents;
+
+			public override JObject? serialize()
+			{
+				JObject _bufferedEvents = new JObject();
+
+				if(_EventList != null)
+				{ _bufferedEvents.Add("EventList",Serializers.serialize_ListEvent(_EventList)); }
+
+				_bufferedEvents.Add(new JProperty("DiscardedEvents", _DiscardedEvents));
+
+				return _bufferedEvents;
+			}
+
+			public override bool deserialize(JObject data)
+			{
+				bool success = true;
+
+				var data_EventList = (JObject?)data["EventList"];
+				if(data_EventList != null)
+				{ _EventList = Deserializers.deserialize_ListEvent(data_EventList); }
+				else
+				{ success = false; }
+
+				var data_DiscardedEvents = data["DiscardedEvents"];
+				if(data_DiscardedEvents != null)
+				{ _DiscardedEvents = Convert.ToInt32(data_DiscardedEvents); }
 				else
 				{ success = false; }
 
