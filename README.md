@@ -55,7 +55,7 @@ using(var apiSession = new ApiSession(address, username, password, /*port = 80, 
     }
     else if(apiSession.Session.LastError != null) //LastError check is for avoiding compile warning only
     {
-        //throw session.Session.LastError; or
+        //throw session.Session.LastError; OR
         Console.Error.WriteLine(apiSession.Session.LastError.exceptionClass + " : " + apiSession.Session.LastError.errorMessage);
     }
 }
@@ -87,7 +87,7 @@ using(var apiSession = new ApiSession(address, username, password, /*port = 80, 
 }
 ```
 
-Creating an event callback:<br>
+Creating an **event callback**:<br>
 > [!NOTE] 
 > *Running code in event_callback will not affect the flow of event stream*
 
@@ -134,7 +134,7 @@ private static bool event_callback(EventPackage event_package)
             //check for other event types
         }
     }
-    
+    return true;
 }
 ```
 Start LiveEventStream asynchronously
@@ -177,6 +177,51 @@ using(var apiSession = new Harbard.ApiSession(ip, username, password, port, fals
     }
 }
 ```
+Creating an **event callback**:<br>
+```c#
+    private static bool event_callback(BufferedEvents? buffered_events, ApiException? api_error)
+    {
+        if (api_error != null)
+        {
+            //some error occured
+            Console.WriteLine(api_error.ToString());
+            return false;//stop receiving
+        }
+        else if (buffered_events != null)
+        {
+            //Printing number of events discarded since the start of buffering
+            //See in Harbard API documentation
+            Console.WriteLine($"Discarded events count: {buffered_events._DiscardedEvents}");
+
+            foreach (var analyticsEvent in buffered_events._EventList)
+            {
+                //analyticsEvent is an object of Event class that provides several event specializations
+                //<EventType>? current_event = event_package.eventInfo.as<EventType>();
+
+                //we chose to check if it is an ANPR type event and write some info to console
+                EventANPR? anprEvent = analyticsEvent.asEventANPR();
+                if (anprEvent != null) //this is an ANPR event
+                {
+                    if (anprEvent._EventInfo != null) //check is for avoiding compile warning only
+                    {
+                        var event_info = anprEvent._EventInfo;
+                        Console.WriteLine($"LicensePlate: {event_info._Text}, Country: {event_info._Country}");
+                    }
+                }
+                else
+                {
+                    //check for other event types
+                }
+            }
+        }
+        return true;
+    }
+```
+<br>
+
+
+**Stored event query**<br>
+
 
 ## Compiling SDK
 ...
