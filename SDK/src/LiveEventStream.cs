@@ -26,25 +26,25 @@ namespace Harbard
         ///                                 Default value: true.  </param>
         /// <param name="keepalive"> Keepalive messages are sent by the device to stop the connection from closing prematurely.
         ///                                 Set a duration in seconds to activate these keepalive messages. Turned off if value is set to -1. 
-        ///                                 Default value: -1 </param>
+        ///                                 Default value: 10 seconds </param>
         /// <param name="detector_filters"> The stream contains all events from all detectors by default.
         ///                                 The events can be filtered by providing a comma separated list of detector ids.
         ///                                 Default value: null (no detector ids) </param>
-        /// <param name="read_timeout"> Set a TimeSpan value to send timeout messages to keep the connection alive
+        /// <param name="read_timeout"> Set a duration in seconds to send timeout messages to keep the connection alive
         ///                                 if the connection is empty for the set amount of time.
-        ///                                 Default value: empty TimeSpan structure. </param>
-        /// <exception cref="InvalidDataException"> Thrown if Keepalive is zero or negatie (other than -1) </exception>        
-        
-        public LiveEventStream(Session session, Func<EventPackage, bool> event_callback, bool contain_images = true, int keepalive = -1,
-                               List<string>? detector_filters = null, TimeSpan read_timeout = new TimeSpan())
+        ///                                 Default value: a TimeSpan of 15 seconds. </param>
+        /// <exception cref="InvalidDataException"> Thrown if Keepalive is zero or negative (other than -1) </exception>        
+
+        public LiveEventStream(Session session, Func<EventPackage, bool> event_callback, bool contain_images = true, int keepalive_seconds = 10,
+                               List<string>? detector_filters = null, int read_timeout_seconds = 15)
         {
             this.session = session;
             containImages = contain_images;
-            this.keepalive = keepalive;
+            keepalive = keepalive_seconds;
             detectorFilters = detector_filters;
             eventCallback = event_callback;
 
-            readTimeout = read_timeout;
+            readTimeout = new TimeSpan(0, 0, read_timeout_seconds);
 
             image = null;
 

@@ -20,9 +20,9 @@ namespace Harbard
             bufferedEventsRequest = new BufferedEventsRequest();
         }
 
-        public void requestStop() { stopRequest = true; }
+        public void RequestStop() { stopRequest = true; }
 
-        public void run()
+        public void Run()
         {
             ApiResult start_response = analyticsSession.StartEvents(bufferedEventsRequest);
 
@@ -40,12 +40,12 @@ namespace Harbard
                         bool externalStopRequested = !callback(analyticsSession.GetEvents(), null);
 
                         if(externalStopRequested)
-                        { requestStop(); }
+                        { RequestStop(); }
                     }
                     catch(ApiException e)
                     {
                         callback(null, e);
-                        requestStop();
+                        RequestStop();
                     }
                 }
                 else
@@ -56,7 +56,7 @@ namespace Harbard
             } while (!stopRequest);
         }
 
-        public void runAsync()
+        public void RunAsync()
         {
             analyticsSession.StartEventsAsync(bufferedEventsRequest, (ApiResult start_result) =>
             {
@@ -74,7 +74,7 @@ namespace Harbard
             if(error != null)
             {
                 callback(null, error);
-                requestStop();
+                RequestStop();
             }
 
             if(!stopRequest)
@@ -84,14 +84,14 @@ namespace Harbard
                     bool externalStopRequested = !callback(result, null);
 
                     if(externalStopRequested)
-                    { requestStop(); }
+                    { RequestStop(); }
                     else
                     { analyticsSession.GetEventsAsync(asyncCallback); }
                 }
                 catch(ApiException e)
                 {
                     callback(null, e);
-                    requestStop();
+                    RequestStop();
                 }                
             }
             else
