@@ -340,6 +340,33 @@ namespace Harbard
             });
         }
 
+        public (HttpResponseMessage?, ApiResult?) requestHttpGet(string url) 
+        {
+            HttpResponseMessage? response = null;
+
+            if(!url.StartsWith("/")) { url = "/" + url; }
+
+            try
+            {
+                using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, protocol + address + ":" + port + url))
+                {
+                    response = httpClient.Send(requestMessage);
+                }
+                return (response, null);
+            }
+            catch (HttpRequestException re)
+            {
+                lastError = new ApiException("RequestError", re.Message);
+                return (response, new ApiResult(null, lastError));
+            }
+            catch (Exception e)
+            {
+                //unlikely
+                lastError = new ApiException("Unknown", e.Message);
+                return (response, new ApiResult(null, lastError));
+            }
+        }
+
         public void Dispose()
         {
             logout();
