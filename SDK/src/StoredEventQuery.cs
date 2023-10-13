@@ -11,20 +11,17 @@ namespace Harbard
     {
         private StorageSession storageSession;
         private StorageEventsRequest storageEventsRequest;
-        private Action<StorageEvents, ApiException?> callback;
 
-        public StoredEventQuery(StorageSession sess, DateTime start, DateTime end, Action<StorageEvents, ApiException?> callback)
+        public StoredEventQuery(StorageSession sess, DateTime start, DateTime end)
         {
             storageSession = sess;
 
             storageEventsRequest = new StorageEventsRequest();
             storageEventsRequest._StartTime = start;
             storageEventsRequest._EndTime = end;
-
-            this.callback = callback;
         }
 
-        public void RunAsync()
+        public void RunAsync(Action<StorageEvents, ApiException?> callback)
         {
             storageSession.GetEventsAsync(storageEventsRequest, callback);
         }
@@ -47,19 +44,42 @@ namespace Harbard
                 {
                     event_image = new EventImage();
                     var task = response.Content.ReadAsByteArrayAsync();
-                    task.RunSynchronously();
+                    task.Wait();
                     event_image.data = task.Result;
-                    //TODO missing image parameters parse from headers X-.....
+                    //Missing X- headers from StorageImage
                 }
             }
 
             return event_image;
         }
 
-        /*
-        public EventVideo? GetEventVideo()
+        
+        public EventVideo? GetEventVideo(Event storageEvent, TimeSpan? maxDuration = null)
         {
-            //TODO
-        }*/
+            EventVideo? event_video = null;
+            if (maxDuration == null) { maxDuration = TimeSpan.FromSeconds(12); }
+            TimeSpan half_duration = (TimeSpan)maxDuration / 2;
+
+            var event_time = storageEvent._EventTime;
+            string start_timestamp = DateTimeConverter.convertToTimeStamp(storageEvent._EventTime - half_duration).ToString();
+            string end_timestamp = DateTimeConverter.convertToTimeStamp(storageEvent._EventTime + half_duration).ToString();
+
+            string event_timestamp = DateTimeConverter.convertToTimeStamp(storageEvent._EventTime).ToString();
+            string url = $"/playback/video?start={start_timestamp}&end={end_timestamp}&sid={storageSession.Session.Id}";
+            (HttpResponseMessage? response, ApiResult? error) = storageSession.Session.requestHttpGet(url);
+
+            if (response != null)
+            {
+                using (StreamReader reader = new StreamReader(response.Content.ReadAsStream()))
+                {
+                    event_video = new EventVideo();
+                    var task = response.Content.ReadAsByteArrayAsync();
+                    task.Wait();
+                    event_video.data = task.Result;
+                }
+            }
+
+            return event_video;
+        }
     }
 }
