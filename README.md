@@ -37,8 +37,8 @@ In order to use API functions one must aquire a device session through one of th
 |-----|-----------|
 | **executeCommand**(category, method, data?) |  |
 | **executeCommandAsync**(category, method, callback, data?) |  |
-| **login**() | |
-| **logout**() | |
+| **login**() |  |
+| **logout**() |  |
 
 ### Examples
 ***Aquire API session*** - *Creating ApiSession with `using` statement takes care of login and logout*
@@ -296,8 +296,8 @@ Now you are ready to run the example programs.
 > Adding **HarbardSDK** to a solution is only possible if it the **SDK** has already been compiled.<br>
 > **See `Compiling SDK` for more**
 
-1. In VisualStudio 2022, go to the Solution Exproler and right-click on your *csproject* file<br>
-![Solution Exproler](Assets/Images/SolutionExproler.png)
+1. In VisualStudio 2022, go to the Solution Explorer and right-click on your *csproject* file<br>
+![Solution Explorer](Assets/Images/SolutionExplorer.png)
 1. Then go to `Add` -> `Project Reference`<br>
 ![Add Project Reference](Assets/Images/Add_ProjectReference.png)
 1. If you do not see the required *dll* file in the *Reference Manager* click on `Browse...`<br>
@@ -314,8 +314,8 @@ Now you are ready to run the example programs.
 > Adding ***NewtonSoft JSON*** to a solution is necessary for the **HarbardSDK** to work!
 > 
 **Follow this quick guide to learn how to add NewtonSoft JSON to your solution:**<br>
-1. In VisualStudio 2022, go to the Solution Exproler and right-click on your *csproject* file<br>
-![Solution Exproler](Assets/Images/SolutionExproler.png)
+1. In VisualStudio 2022, go to the Solution Explorer and right-click on your *csproject* file<br>
+![Solution Exprlorer](Assets/Images/SolutionExplorer.png)
 2. Then click on `Manage NuGet Packages...`<br>
 ![Manage NuGet Packages](Assets/Images/Manage_NuGet_Packages.png)
 3. In the *NuGet Package Manager* search for ***Newtonsoft.Json*** under the *Browse* tab. Then click *Install*
