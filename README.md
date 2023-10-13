@@ -109,7 +109,7 @@ private static bool event_callback(EventPackage event_package)
         //event_package.image.data contains the event image binary
         //event_package.image.width, event_package.image.height holds the event image's dimensions
         //event_package.image.format holds the event image format
-        File.WriteAllBytes("./" + event_package.image.imageId + event_package.image.format, event_package.image.data);//we chose to save image to disc
+        File.WriteAllBytes("./" + event_package.image.imageId + "." + event_package.image.format, event_package.image.data);//we chose to save image to disc
     }
 
     //Check for event metadata
@@ -168,7 +168,7 @@ using(var apiSession = new Harbard.ApiSession(ip, username, password, port, fals
     if(apiSession)
     {    
         LiveEventQuery liveEventQuery = new LiveEventQuery(apiSession.Analytics, anprCallback);
-        liveEventQuery.run(); //blocks until session/connection is closed or returning false from event callback
+        liveEventQuery.Run(); //blocks until session/connection is closed or returning false from event callback
     }
     else
     {
@@ -221,13 +221,102 @@ Creating an **event callback**:<br>
 
 
 **Stored event query**<br>
+- Contains *event image*, *event video* and *metadata*
+- Requires storage device
+- **StoredEventQuery** class implements recieving a list of events from stored event query
 
+```c#
+using (var apiSession = new ApiSession(address, username, password, /*port = 80*/))
+{
+    if (apiSession) //login succeeded, apiSession is valid, contains apiSession.Session.Id
+    {
+        StoredEventQuery storedEventQuery = new StoredEventQuery(apiSession.Storage, startTime, endTime);
 
-## Compiling SDK
-...
+        StorageEvents storageEvents = storedEventQuery.Run(); //runs once and returns with a list of events recorded in the given timeframe
 
-...
-### Adding HarbardSDK to a solution
-...
+        if(storageEvents._EventList != null) //check is for avoiding compile warning only
+        {
+            foreach (var storageEvent in storageEvents._EventList)
+            {
+                //Fetching relevant EventImage by calling the GetEventImage function:
+                var image = storedEventQuery.GetEventImage(storageEvent);
 
-## Examples
+                //your code here
+
+                //we chose to save image to disk:
+                if ((image != null) && (image.data != null)) //check is for avoiding compile warning only
+                { File.WriteAllBytes("./" + storageEvent._EventID + "." + image.format, image.data); }
+
+                //Fetching relevant EventVideo by calling the GetEventVideo function:
+                var video = storedEventQuery.GetEventVideo(storageEvent);
+
+                //your code here
+
+                //we chose to save video to disk
+                if ((video != null) && (video.data != null)) //check is for avoiding compile warning only
+                { File.WriteAllBytes("./" + storageEvent._EventID + "." + video.format, video.data); }
+            }
+        }
+    }
+    else if (apiSession.Session.LastError != null) //LastError check is for avoiding compile warning only
+    {
+        //throw session.Session.LastError; OR
+        Console.Error.WriteLine(apiSession.Session.LastError.exceptionClass + " : " + apiSession.Session.LastError.errorMessage);
+    }
+}
+```
+
+## **Compiling SDK** in VisualStudio 2022
+> [!IMPORTANT]
+> You need to compile the **HarbardSDK** before using it
+
+1. With the ***HarbardSDK.csproj*** file open and the configuration set to *Release* click on *Build*<br>
+![Release Build](Assets/Images/Release_Build.png)
+2. Then click on *Build Solution*<br>
+![Build Solution](Assets/Images/Build_Solution.png)
+
+This will create a *dll* file in the *bin/Release* by default.<br>
+You can use this *dll* file to `Add HarbardSDK to your solution`.
+
+## Compiling examples
+
+Before being able to run the example programs you need to compile them with the same method used when `Compiling the SDK`.<br>
+
+1. With the *your chosen example program's .csproj* file open and the configuration set to *Release* click on *Build*<br>
+![Release Build](Assets/Images/Release_Build.png)
+1. Then click on *Build Solution*<br>
+![Build Solution](Assets/Images/Build_Solution.png)
+
+Now you are ready to run the example programs.
+
+## **Adding HarbardSDK to a solution** in VisualStudio 2022
+**Follow this quick guide to learn how to add HarbadSDK to your solution:**<br>
+
+> [!IMPORTANT] 
+> Adding **HarbardSDK** to a solution is only possible if it the **SDK** has already been compiled.<br>
+> **See `Compiling SDK` for more**
+
+1. In VisualStudio 2022, go to the Solution Exproler and right-click on your *csproject* file<br>
+![Solution Exproler](Assets/Images/SolutionExproler.png)
+1. Then go to `Add` -> `Project Reference`<br>
+![Add Project Reference](Assets/Images/Add_ProjectReference.png)
+1. If you do not see the required *dll* file in the *Reference Manager* click on `Browse...`<br>
+![Reference Manager](Assets/Images/ReferenceManager.png)
+1. Find your **HarbardSDK.dll** file, select it and click `Add`<br>
+![Selecting the dll file](Assets/Images/Select_SDK_dll.png)
+1. After the **HarbardSDK.dll** file has been added to the *Reference Manager* click on `OK`<br>
+![Adding the HarbardSDK to the solution](Assets/Images/ReferenceManager_OK.png)
+
+## Adding dependencies to a solution in VisualStudio 2022
+### NewtonSoft JSON
+
+> [!IMPORTANT] 
+> Adding ***NewtonSoft JSON*** to a solution is necessary for the **HarbardSDK** to work!
+> 
+**Follow this quick guide to learn how to add NewtonSoft JSON to your solution:**<br>
+1. In VisualStudio 2022, go to the Solution Exproler and right-click on your *csproject* file<br>
+![Solution Exproler](Assets/Images/SolutionExproler.png)
+2. Then click on `Manage NuGet Packages...`<br>
+![Manage NuGet Packages](Assets/Images/Manage_NuGet_Packages.png)
+3. In the *NuGet Package Manager* search for ***Newtonsoft.Json*** under the *Browse* tab. Then click *Install*
+![Install NewtonSoft NuGet package](Assets/Images/Install_Newtonsoft_NuGet.png)
