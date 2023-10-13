@@ -50,6 +50,9 @@ namespace Example
                 Console.WriteLine($"discarded events count: {buffered_events._DiscardedEvents}");
                 foreach (var analyticsEvent in buffered_events._EventList)
                 {
+                    //We chose to print detector name : event ID : event time
+                    Console.WriteLine($"{analyticsEvent._Config._DisplayName} : {analyticsEvent._EventID} : {analyticsEvent._EventTime}");
+
                     //analyticsEvent is an object of Event class that provides several event specializations
                     //<EventType>? current_event = event_package.eventInfo.as<EventType>();
 

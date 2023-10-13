@@ -63,6 +63,9 @@ namespace Example
             if (event_package.eventInfo != null)
             {
                
+                //We chose to print detector name : event ID : event time
+                Console.WriteLine($"{event_package.eventInfo._Config._DisplayName} : {event_package.eventInfo._EventID} : {event_package.eventInfo._EventTime}");
+
                 //your code here
                 //event_package.eventInfo is an object of Event class that provides several event specializations
                 //<EventType>? current_event = event_package.eventInfo.as<EventType>();

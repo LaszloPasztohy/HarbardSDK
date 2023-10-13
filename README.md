@@ -35,10 +35,10 @@ In order to use API functions one must aquire a device session through one of th
 
 | Functions | Description |
 |-----|-----------|
-| **executeCommand**(category, method, data?) |  |
-| **executeCommandAsync**(category, method, callback, data?) |  |
-| **login**() |  |
-| **logout**() |  |
+| **executeCommand**(category, method, data?) | Executes an API method in a given category<br> data is expected JObject (for further details see [Harbard API documentation](Docs/HarbardAPI.pdf))  |
+| **executeCommandAsync**(category, method, callback, data?) | Asynchronous version of executeCommand that expects a `callback` |
+| **login**() | Provides SessionID for API calls in case of a successful login<br> Must be called before calling *executeCommand* |
+| **logout**() | Releases previously acquired SessionID |
 
 ### Examples
 ***Aquire API session*** - *Creating ApiSession with `using` statement takes care of login and logout*
@@ -115,6 +115,9 @@ private static bool event_callback(EventPackage event_package)
     //Check for event metadata
     if (event_package.eventInfo != null)
     {
+        //We chose to print detector name : event ID : event time
+        Console.WriteLine($"{event_package.eventInfo._Config._DisplayName} : {event_package.eventInfo._EventID} : {event_package.eventInfo._EventTime}");
+
         //your code here
         //event_package.eventInfo is an object of Event class that provides several event specializations
         //<EventType>? current_event = event_package.eventInfo.as<EventType>();
@@ -195,6 +198,9 @@ Creating an **event callback**:<br>
 
             foreach (var analyticsEvent in buffered_events._EventList)
             {
+                //We chose to print detector name : event ID : event time
+                Console.WriteLine($"{analyticsEvent._Config._DisplayName} : {analyticsEvent._EventID} : {analyticsEvent._EventTime}");
+
                 //analyticsEvent is an object of Event class that provides several event specializations
                 //<EventType>? current_event = event_package.eventInfo.as<EventType>();
 
@@ -238,6 +244,9 @@ using (var apiSession = new ApiSession(address, username, password, /*port = 80*
         {
             foreach (var storageEvent in storageEvents._EventList)
             {
+                //We chose to print detector name : event ID : event time
+                Console.WriteLine($"{storageEvent._Config._DisplayName} : {storageEvent._EventID} : {storageEvent._EventTime}");
+
                 //Fetching relevant EventImage by calling the GetEventImage function:
                 var image = storedEventQuery.GetEventImage(storageEvent);
 
@@ -270,9 +279,9 @@ using (var apiSession = new ApiSession(address, username, password, /*port = 80*
 > [!IMPORTANT]
 > You need to compile the **HarbardSDK** before using it
 
-1. With the ***HarbardSDK.csproj*** file open and the configuration set to *Release* click on *Build*<br>
+1. Open ***HarbardSDK.csproj*** file and set configuration to *Release*. Then click on *Build*<br>
 ![Release Build](Assets/Images/Release_Build.png)
-2. Then click on *Build Solution*<br>
+1. Then click on *Build Solution*<br>
 ![Build Solution](Assets/Images/Build_Solution.png)
 
 This will create a *dll* file in the *bin/Release* by default.<br>
@@ -282,7 +291,7 @@ You can use this *dll* file to `Add HarbardSDK to your solution`.
 
 Before being able to run the example programs you need to compile them with the same method used when `Compiling the SDK`.<br>
 
-1. With the *your chosen example program's .csproj* file open and the configuration set to *Release* click on *Build*<br>
+1. Open *your chosen example program's .csproj* file and set configuration to *Release*. Then click on *Build*<br>
 ![Release Build](Assets/Images/Release_Build.png)
 1. Then click on *Build Solution*<br>
 ![Build Solution](Assets/Images/Build_Solution.png)
