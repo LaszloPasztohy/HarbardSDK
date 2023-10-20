@@ -4,6 +4,47 @@ namespace Harbard
 {
 	namespace Api
 	{
+		public class StorageEvents : StorageEventsRequest
+		{
+			public List<Event>? _EventList;
+			public string? _Status;
+
+			public override JObject? serialize()
+			{
+				var base_jobj = base.serialize();
+				if(base_jobj != null)
+				{
+					if(_EventList != null)
+					{ base_jobj.Add("EventList",Serializers.serialize_ListEvent(_EventList)); }
+
+					base_jobj.Add(new JProperty("Status", _Status));
+
+				}
+				return base_jobj;
+			}
+
+			public override bool deserialize(JObject data)
+			{
+				bool success = true;
+
+				var data_EventList = (JObject?)data["EventList"];
+				if(data_EventList != null)
+				{ _EventList = Deserializers.deserialize_ListEvent(data_EventList); }
+				else
+				{ success = false; }
+
+				var data_Status = data["Status"];
+				if(data_Status != null)
+				{ _Status = Convert.ToString(data_Status); }
+				else
+				{ success = false; }
+
+				base.deserialize(data);
+
+				return success;
+			}
+		}
+
 		public class StorageEventsRequest : AJsonSerializable
 		{
 			public string? _ID;
@@ -57,47 +98,6 @@ namespace Harbard
 				if(data_Filter != null)
 				{ success = success && _Filter.deserialize(data_Filter); }
 
-
-				return success;
-			}
-		}
-
-		public class StorageEvents : StorageEventsRequest
-		{
-			public List<Event>? _EventList;
-			public string? _Status;
-
-			public override JObject? serialize()
-			{
-				var base_jobj = base.serialize();
-				if(base_jobj != null)
-				{
-					if(_EventList != null)
-					{ base_jobj.Add("EventList",Serializers.serialize_ListEvent(_EventList)); }
-
-					base_jobj.Add(new JProperty("Status", _Status));
-
-				}
-				return base_jobj;
-			}
-
-			public override bool deserialize(JObject data)
-			{
-				bool success = true;
-
-				var data_EventList = (JObject?)data["EventList"];
-				if(data_EventList != null)
-				{ _EventList = Deserializers.deserialize_ListEvent(data_EventList); }
-				else
-				{ success = false; }
-
-				var data_Status = data["Status"];
-				if(data_Status != null)
-				{ _Status = Convert.ToString(data_Status); }
-				else
-				{ success = false; }
-
-				base.deserialize(data);
 
 				return success;
 			}

@@ -8,6 +8,134 @@ namespace Harbard
 		{
 			public SystemSession(Session parent) : base(parent) {}
 
+			public ApiResult AddUser(User data)
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "AddUser", data.serialize());
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void AddUserAsync(User data, Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "AddUser", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+			}
+
+			public ApiResult ClearSecurityHistory()
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "ClearSecurityHistory");
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void ClearSecurityHistoryAsync(Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "ClearSecurityHistory", (ApiResult ApiRes) => { callback(ApiRes); });
+			}
+
+			public ApiResult DeleteUser(UserId data)
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "DeleteUser", data.serialize());
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void DeleteUserAsync(UserId data, Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "DeleteUser", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+			}
+
+			public ApiResult FactoryReset()
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "FactoryReset");
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void FactoryResetAsync(Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "FactoryReset", (ApiResult ApiRes) => { callback(ApiRes); });
+			}
+
+			public ApiVersion GetApiVersion()
+			{
+				ApiResult ApiRes = session.executeCommand("System", "GetApiVersion");
+				var response = new ApiVersion();
+
+				if(ApiRes.data != null)
+				{
+					if(response.deserialize(ApiRes.data))
+					{
+						return response;
+					}
+				}
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return response;
+			}
+
+			public void GetApiVersionAsync(Action<ApiVersion, ApiException?> callback)
+			{
+				session.executeCommandAsync("System", "GetApiVersion", (ApiResult ApiRes) =>
+				{
+					var response = new ApiVersion();
+
+					if(ApiRes.data != null)
+					{
+						response.deserialize(ApiRes.data);
+					}
+
+					callback(response, ApiRes.error);
+				});
+			}
+
+			public UserInfo GetCurrentUser()
+			{
+				ApiResult ApiRes = session.executeCommand("System", "GetCurrentUser");
+				var response = new UserInfo();
+
+				if(ApiRes.data != null)
+				{
+					if(response.deserialize(ApiRes.data))
+					{
+						return response;
+					}
+				}
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return response;
+			}
+
+			public void GetCurrentUserAsync(Action<UserInfo, ApiException?> callback)
+			{
+				session.executeCommandAsync("System", "GetCurrentUser", (ApiResult ApiRes) =>
+				{
+					var response = new UserInfo();
+
+					if(ApiRes.data != null)
+					{
+						response.deserialize(ApiRes.data);
+					}
+
+					callback(response, ApiRes.error);
+				});
+			}
+
 			public SystemSettingsResponse GetDevice()
 			{
 				ApiResult ApiRes = session.executeCommand("System", "GetDevice");
@@ -32,40 +160,6 @@ namespace Harbard
 				session.executeCommandAsync("System", "GetDevice", (ApiResult ApiRes) =>
 				{
 					var response = new SystemSettingsResponse();
-
-					if(ApiRes.data != null)
-					{
-						response.deserialize(ApiRes.data);
-					}
-
-					callback(response, ApiRes.error);
-				});
-			}
-
-			public SystemSettings SetDevice()
-			{
-				ApiResult ApiRes = session.executeCommand("System", "SetDevice");
-				var response = new SystemSettings();
-
-				if(ApiRes.data != null)
-				{
-					if(response.deserialize(ApiRes.data))
-					{
-						return response;
-					}
-				}
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return response;
-			}
-
-			public void SetDeviceAsync(Action<SystemSettings, ApiException?> callback)
-			{
-				session.executeCommandAsync("System", "SetDevice", (ApiResult ApiRes) =>
-				{
-					var response = new SystemSettings();
 
 					if(ApiRes.data != null)
 					{
@@ -144,100 +238,10 @@ namespace Harbard
 				});
 			}
 
-			public ApiResult SetGpioInputSettings(GpioInputPort data)
+			public NtpSettings GetNtpSettings()
 			{
-				ApiResult ApiRes = Session.executeCommand("System", "SetGpioInputSettings", data.serialize());
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void SetGpioInputSettingsAsync(GpioInputPort data, Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "SetGpioInputSettings", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
-			}
-
-			public ApiResult SetGpioOutputSettings(GpioOutputPort data)
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "SetGpioOutputSettings", data.serialize());
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void SetGpioOutputSettingsAsync(GpioOutputPort data, Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "SetGpioOutputSettings", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
-			}
-
-			public ApiResult TriggerGpioOutput(GpioPortId data)
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "TriggerGpioOutput", data.serialize());
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void TriggerGpioOutputAsync(GpioPortId data, Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "TriggerGpioOutput", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
-			}
-
-			public ApiResult SetGpioOutput(GpioOutputPortState data)
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "SetGpioOutput", data.serialize());
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void SetGpioOutputAsync(GpioOutputPortState data, Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "SetGpioOutput", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
-			}
-
-			public ApiResult Reboot(RebootSettings data)
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "Reboot", data.serialize());
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void RebootAsync(RebootSettings data, Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "Reboot", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
-			}
-
-			public ApiResult FactoryReset()
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "FactoryReset");
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void FactoryResetAsync(Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "FactoryReset", (ApiResult ApiRes) => { callback(ApiRes); });
-			}
-
-			public TestOutput RunTest(TestInput data)
-			{
-				ApiResult ApiRes = session.executeCommand("System", "RunTest", data.serialize());
-				var response = new TestOutput();
+				ApiResult ApiRes = session.executeCommand("System", "GetNtpSettings");
+				var response = new NtpSettings();
 
 				if(ApiRes.data != null)
 				{
@@ -253,11 +257,11 @@ namespace Harbard
 				return response;
 			}
 
-			public void RunTestAsync(TestInput data, Action<TestOutput, ApiException?> callback)
+			public void GetNtpSettingsAsync(Action<NtpSettings, ApiException?> callback)
 			{
-				session.executeCommandAsync("System", "RunTest", (ApiResult ApiRes) =>
+				session.executeCommandAsync("System", "GetNtpSettings", (ApiResult ApiRes) =>
 				{
-					var response = new TestOutput();
+					var response = new NtpSettings();
 
 					if(ApiRes.data != null)
 					{
@@ -265,13 +269,13 @@ namespace Harbard
 					}
 
 					callback(response, ApiRes.error);
-				}, data.serialize());
+				});
 			}
 
-			public ApiVersion GetApiVersion()
+			public SecurityHistory GetSecurityHistory()
 			{
-				ApiResult ApiRes = session.executeCommand("System", "GetApiVersion");
-				var response = new ApiVersion();
+				ApiResult ApiRes = session.executeCommand("System", "GetSecurityHistory");
+				var response = new SecurityHistory();
 
 				if(ApiRes.data != null)
 				{
@@ -287,11 +291,11 @@ namespace Harbard
 				return response;
 			}
 
-			public void GetApiVersionAsync(Action<ApiVersion, ApiException?> callback)
+			public void GetSecurityHistoryAsync(Action<SecurityHistory, ApiException?> callback)
 			{
-				session.executeCommandAsync("System", "GetApiVersion", (ApiResult ApiRes) =>
+				session.executeCommandAsync("System", "GetSecurityHistory", (ApiResult ApiRes) =>
 				{
-					var response = new ApiVersion();
+					var response = new SecurityHistory();
 
 					if(ApiRes.data != null)
 					{
@@ -336,70 +340,6 @@ namespace Harbard
 				});
 			}
 
-			public ApiResult SetSecuritySettings(SecuritySettings data)
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "SetSecuritySettings", data.serialize());
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void SetSecuritySettingsAsync(SecuritySettings data, Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "SetSecuritySettings", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
-			}
-
-			public ApiResult ClearSecurityHistory()
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "ClearSecurityHistory");
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void ClearSecurityHistoryAsync(Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "ClearSecurityHistory", (ApiResult ApiRes) => { callback(ApiRes); });
-			}
-
-			public SecurityHistory GetSecurityHistory()
-			{
-				ApiResult ApiRes = session.executeCommand("System", "GetSecurityHistory");
-				var response = new SecurityHistory();
-
-				if(ApiRes.data != null)
-				{
-					if(response.deserialize(ApiRes.data))
-					{
-						return response;
-					}
-				}
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return response;
-			}
-
-			public void GetSecurityHistoryAsync(Action<SecurityHistory, ApiException?> callback)
-			{
-				session.executeCommandAsync("System", "GetSecurityHistory", (ApiResult ApiRes) =>
-				{
-					var response = new SecurityHistory();
-
-					if(ApiRes.data != null)
-					{
-						response.deserialize(ApiRes.data);
-					}
-
-					callback(response, ApiRes.error);
-				});
-			}
-
 			public TimeSettings GetTime()
 			{
 				ApiResult ApiRes = session.executeCommand("System", "GetTime");
@@ -424,104 +364,6 @@ namespace Harbard
 				session.executeCommandAsync("System", "GetTime", (ApiResult ApiRes) =>
 				{
 					var response = new TimeSettings();
-
-					if(ApiRes.data != null)
-					{
-						response.deserialize(ApiRes.data);
-					}
-
-					callback(response, ApiRes.error);
-				});
-			}
-
-			public ApiResult SetTime(TimeSettings data)
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "SetTime", data.serialize());
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void SetTimeAsync(TimeSettings data, Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "SetTime", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
-			}
-
-			public NtpSettings GetNtpSettings()
-			{
-				ApiResult ApiRes = session.executeCommand("System", "GetNtpSettings");
-				var response = new NtpSettings();
-
-				if(ApiRes.data != null)
-				{
-					if(response.deserialize(ApiRes.data))
-					{
-						return response;
-					}
-				}
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return response;
-			}
-
-			public void GetNtpSettingsAsync(Action<NtpSettings, ApiException?> callback)
-			{
-				session.executeCommandAsync("System", "GetNtpSettings", (ApiResult ApiRes) =>
-				{
-					var response = new NtpSettings();
-
-					if(ApiRes.data != null)
-					{
-						response.deserialize(ApiRes.data);
-					}
-
-					callback(response, ApiRes.error);
-				});
-			}
-
-			public ApiResult SetNtpSettings(NtpSettings data)
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "SetNtpSettings", data.serialize());
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void SetNtpSettingsAsync(NtpSettings data, Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "SetNtpSettings", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
-			}
-
-			public UserInfo GetCurrentUser()
-			{
-				ApiResult ApiRes = session.executeCommand("System", "GetCurrentUser");
-				var response = new UserInfo();
-
-				if(ApiRes.data != null)
-				{
-					if(response.deserialize(ApiRes.data))
-					{
-						return response;
-					}
-				}
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return response;
-			}
-
-			public void GetCurrentUserAsync(Action<UserInfo, ApiException?> callback)
-			{
-				session.executeCommandAsync("System", "GetCurrentUser", (ApiResult ApiRes) =>
-				{
-					var response = new UserInfo();
 
 					if(ApiRes.data != null)
 					{
@@ -566,21 +408,6 @@ namespace Harbard
 				});
 			}
 
-			public ApiResult AddUser(User data)
-			{
-				ApiResult ApiRes = Session.executeCommand("System", "AddUser", data.serialize());
-
-				if(ApiRes.error != null)
-				{ throw(ApiRes.error); };
-
-				return ApiRes;
-			}
-
-			public void AddUserAsync(User data, Action<ApiResult> callback)
-			{
-				session.executeCommandAsync("System", "AddUser", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
-			}
-
 			public ApiResult ModifyUser(User data)
 			{
 				ApiResult ApiRes = Session.executeCommand("System", "ModifyUser", data.serialize());
@@ -596,9 +423,9 @@ namespace Harbard
 				session.executeCommandAsync("System", "ModifyUser", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
 			}
 
-			public ApiResult DeleteUser(UserId data)
+			public ApiResult Reboot(RebootSettings data)
 			{
-				ApiResult ApiRes = Session.executeCommand("System", "DeleteUser", data.serialize());
+				ApiResult ApiRes = Session.executeCommand("System", "Reboot", data.serialize());
 
 				if(ApiRes.error != null)
 				{ throw(ApiRes.error); };
@@ -606,9 +433,182 @@ namespace Harbard
 				return ApiRes;
 			}
 
-			public void DeleteUserAsync(UserId data, Action<ApiResult> callback)
+			public void RebootAsync(RebootSettings data, Action<ApiResult> callback)
 			{
-				session.executeCommandAsync("System", "DeleteUser", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+				session.executeCommandAsync("System", "Reboot", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+			}
+
+			public TestOutput RunTest(TestInput data)
+			{
+				ApiResult ApiRes = session.executeCommand("System", "RunTest", data.serialize());
+				var response = new TestOutput();
+
+				if(ApiRes.data != null)
+				{
+					if(response.deserialize(ApiRes.data))
+					{
+						return response;
+					}
+				}
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return response;
+			}
+
+			public void RunTestAsync(TestInput data, Action<TestOutput, ApiException?> callback)
+			{
+				session.executeCommandAsync("System", "RunTest", (ApiResult ApiRes) =>
+				{
+					var response = new TestOutput();
+
+					if(ApiRes.data != null)
+					{
+						response.deserialize(ApiRes.data);
+					}
+
+					callback(response, ApiRes.error);
+				}, data.serialize());
+			}
+
+			public SystemSettings SetDevice()
+			{
+				ApiResult ApiRes = session.executeCommand("System", "SetDevice");
+				var response = new SystemSettings();
+
+				if(ApiRes.data != null)
+				{
+					if(response.deserialize(ApiRes.data))
+					{
+						return response;
+					}
+				}
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return response;
+			}
+
+			public void SetDeviceAsync(Action<SystemSettings, ApiException?> callback)
+			{
+				session.executeCommandAsync("System", "SetDevice", (ApiResult ApiRes) =>
+				{
+					var response = new SystemSettings();
+
+					if(ApiRes.data != null)
+					{
+						response.deserialize(ApiRes.data);
+					}
+
+					callback(response, ApiRes.error);
+				});
+			}
+
+			public ApiResult SetGpioInputSettings(GpioInputPort data)
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "SetGpioInputSettings", data.serialize());
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void SetGpioInputSettingsAsync(GpioInputPort data, Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "SetGpioInputSettings", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+			}
+
+			public ApiResult SetGpioOutput(GpioOutputPortState data)
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "SetGpioOutput", data.serialize());
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void SetGpioOutputAsync(GpioOutputPortState data, Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "SetGpioOutput", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+			}
+
+			public ApiResult SetGpioOutputSettings(GpioOutputPort data)
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "SetGpioOutputSettings", data.serialize());
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void SetGpioOutputSettingsAsync(GpioOutputPort data, Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "SetGpioOutputSettings", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+			}
+
+			public ApiResult SetNtpSettings(NtpSettings data)
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "SetNtpSettings", data.serialize());
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void SetNtpSettingsAsync(NtpSettings data, Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "SetNtpSettings", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+			}
+
+			public ApiResult SetSecuritySettings(SecuritySettings data)
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "SetSecuritySettings", data.serialize());
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void SetSecuritySettingsAsync(SecuritySettings data, Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "SetSecuritySettings", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+			}
+
+			public ApiResult SetTime(TimeSettings data)
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "SetTime", data.serialize());
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void SetTimeAsync(TimeSettings data, Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "SetTime", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
+			}
+
+			public ApiResult TriggerGpioOutput(GpioPortId data)
+			{
+				ApiResult ApiRes = Session.executeCommand("System", "TriggerGpioOutput", data.serialize());
+
+				if(ApiRes.error != null)
+				{ throw(ApiRes.error); };
+
+				return ApiRes;
+			}
+
+			public void TriggerGpioOutputAsync(GpioPortId data, Action<ApiResult> callback)
+			{
+				session.executeCommandAsync("System", "TriggerGpioOutput", (ApiResult ApiRes) => { callback(ApiRes); }, data.serialize());
 			}
 
 		}	}
