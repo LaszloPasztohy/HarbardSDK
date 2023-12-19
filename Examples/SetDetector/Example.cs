@@ -16,35 +16,57 @@ namespace Example
             string address = args[0];
             string username = args[1];
             string password = args[2];
-            string detectorID = args[3];
-            List<string> licensePlates = new List<string>();            
+            //Name of this detector instance displayed on user-facing interfaces:
+            string detectorDisplayName = args[3];
+            //Any quantity of license plates separated by spaces (as app arguments) are placed inside a List for better accessibility:
+            List<string> licensePlates = new List<string>();
             for (int i = 4; i < args.Length; i++)
             { licensePlates.Add(args[i]); }
-            
+            //Supports wildcard for single(?) and multiple(*) characters (e.g.ABC?23).
+            //Supports country codes with forward slash (e.g.GB/ABC123).
+
             using (var apiSession = new ApiSession(address, username, password))
             {
                 if (apiSession) //login succeeded, apiSession is valid, contains apiSession.Session.Id
                 {
                     try
                     {
-                        Detector detector = new Detector();
-                        DetectorConfigurationANPR config = new DetectorConfigurationANPR();
+                        //Get all detectors on the device:
+                        DetectorList detectorList = apiSession.Analytics.GetDetectors();
 
-                        //Unique ID of the detector instance:
-                        detector._DetectorID = detectorID;
-                        //Enable detector:
-                        config._Enabled = true;
-                        //Enable filter usage:
-                        config._Whitelist = true;
-                        //List of license plates to signal for:
-                        string filter = "";
-                        foreach (var licensePlate in licensePlates)
-                        { filter += licensePlate + "\n"; }
+                        //All detectors on the device with the specified DisplayName are found and their IDs are saved:
+                        List<string> detectorIDs = new List<string>();
+                        if(detectorList._Detectors != null) //Check is for avoiding compile warning only
+                        {
+                            foreach (var det in detectorList._Detectors)
+                            {
+                                if((det._DisplayName == detectorDisplayName) && (det._DetectorID != null))
+                                { detectorIDs.Add(det._DetectorID); }
+                            }
+                        }
 
-                        config._Filter = filter;
-                        detector._Config = config;
+                        foreach (var detectorID in detectorIDs)
+                        {
+                            Detector detector = new Detector();
+                            DetectorConfigurationANPR config = new DetectorConfigurationANPR();
 
-                        apiSession.Analytics.SetDetector(detector);
+                            //Unique ID of the detector instance (resolved above from the DisplayName):
+                            detector._DetectorID = detectorID;
+                            //Enable detector:
+                            config._Enabled = true;
+                            //Enable filter usage:
+                            config._Whitelist = true;
+                            //List of license plates to signal for:
+                            string filter = "";
+                            foreach (var licensePlate in licensePlates)
+                            { filter += licensePlate + "\n"; }
+
+                            config._Filter = filter;
+                            detector._Config = config;
+
+                            //Overrides existing detector settings with new settings specified in code above:
+                            apiSession.Analytics.SetDetector(detector);
+                        }
                     }
                     catch (ApiException e)
                     {
